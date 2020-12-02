@@ -321,7 +321,7 @@ public class MaximoConnector {
 		
 		if (options.isApikeyAuth()) {
 			uri = addApiKeyToURI(uri);
-			logger.info("URI with apikey: "+uri);
+			logger.fine("URI with apikey: "+uri);
 		}
 		
 		logger.fine(uri);
@@ -385,7 +385,7 @@ public class MaximoConnector {
 		
 		if (options.isApikeyAuth()) {
 			uri = addApiKeyToURI(uri);
-			logger.info("URI with apikey: "+uri);
+			logger.fine("URI with apikey: "+uri);
 		}
 		
 		logger.fine(uri);
@@ -447,7 +447,7 @@ public class MaximoConnector {
 		
 		if (options.isApikeyAuth()) {
 			uri = addApiKeyToURI(uri);
-			logger.info("URI with apikey: "+uri);
+			logger.fine("URI with apikey: "+uri);
 		}
 		
 		URL httpURL = new URL(uri);
