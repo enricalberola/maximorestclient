@@ -341,6 +341,8 @@ public class ResourceSet {
 		}
 		if (this.jsonObject.containsKey("rdfs:member")) {
 			this.jsonArray = (JsonArray) this.jsonObject.get("rdfs:member");
+		} else if (this.jsonObject.containsKey("oslc:results")) {
+			this.jsonArray = (JsonArray) this.jsonObject.get("oslc:results");
 		} else {
 			this.jsonArray = (JsonArray) this.jsonObject.get("member");
 		}
@@ -357,6 +359,8 @@ public class ResourceSet {
 		this.jsonObject = this.mc.get(this.appURI);
 		if (this.jsonObject.containsKey("rdfs:member")) {
 			this.jsonArray = (JsonArray) this.jsonObject.get("rdfs:member");
+		} else if (this.jsonObject.containsKey("oslc:results")) {
+			this.jsonArray = (JsonArray) this.jsonObject.get("oslc:results");
 		} else {
 			this.jsonArray = (JsonArray) this.jsonObject.get("member");
 		}
@@ -385,10 +389,16 @@ public class ResourceSet {
 			} 
 			else if (this.jsonObject.containsKey("oslc:responseInfo")) 
 			{
-				if(this.jsonObject.getJsonObject("oslc:responseInfo").containsKey("oslc:nextPage"))
+				JsonObject jsonObjectResponseInfo = this.jsonObject.getJsonObject("oslc:responseInfo");
+				
+				if(jsonObjectResponseInfo.containsKey("oslc:nextPage"))
 				{
-					this.appURI = this.jsonObject.getJsonObject("oslc:responseInfo")
-							.getJsonObject("oslc:nextPage").getString("rdf:resource");
+					if (jsonObjectResponseInfo.get("oslc:nextPage") instanceof JsonString) {
+						this.appURI = jsonObjectResponseInfo.getString("oslc:nextPage");
+					} else {
+						this.appURI = jsonObjectResponseInfo
+								.getJsonObject("oslc:nextPage").getString("rdf:resource");
+					}
 				}
 			}
 		}
@@ -399,12 +409,11 @@ public class ResourceSet {
 		}
 
 		this.jsonObject = this.mc.get(this.appURI);
-		if (this.jsonObject.containsKey("rdfs:member")) 
-		{
+		if (this.jsonObject.containsKey("rdfs:member")) {
 			this.jsonArray = (JsonArray) this.jsonObject.get("rdfs:member");
-		} 
-		else 
-		{
+		} else if (this.jsonObject.containsKey("oslc:results")) {
+			this.jsonArray = (JsonArray) this.jsonObject.get("oslc:results");
+		} else {
 			this.jsonArray = (JsonArray) this.jsonObject.get("member");
 		}
 		return this;
@@ -453,18 +462,41 @@ public class ResourceSet {
 					break;
 				}
 			}
-			if (pageno == 2) {
-				this.appURI = this.appURI.replace(
-						"pageno=" + String.valueOf(pageno), "");
+			if (isPageNo) {
+				if (pageno == 2) {
+					this.appURI = this.appURI.replace(
+							"pageno=" + String.valueOf(pageno), "");
+				} else {
+					this.appURI = this.appURI.replace(
+							"pageno=" + String.valueOf(pageno),
+							"pageno=" + String.valueOf(pageno - 1));
+				}
 			} else {
-				this.appURI = this.appURI.replace(
-						"pageno=" + String.valueOf(pageno),
-						"pageno=" + String.valueOf(pageno - 1));
+				boolean isStartIndex = false;
+				int startIndex = 0;
+				for (String str : strs) {
+					if (str.equals("_startIndex")) {
+						isStartIndex = true;
+					} else if (isStartIndex) {
+						startIndex = Integer.valueOf(str);
+						break;
+					}
+				}
+				if (startIndex <= pageSize) {
+					this.appURI = this.appURI.replace(
+							"_startIndex=" + String.valueOf(startIndex), "");
+				} else {
+					this.appURI = this.appURI.replace(
+							"_startIndex=" + String.valueOf(startIndex),
+							"_startIndex=" + String.valueOf(startIndex - pageSize));
+				}
 			}
 		}
 		this.jsonObject = this.mc.get(this.appURI);
 		if (this.jsonObject.containsKey("rdfs:member")) {
 			this.jsonArray = (JsonArray) this.jsonObject.get("rdfs:member");
+		} else if (this.jsonObject.containsKey("oslc:results")) {
+			this.jsonArray = (JsonArray) this.jsonObject.get("oslc:results");
 		} else {
 			this.jsonArray = (JsonArray) this.jsonObject.get("member");
 		}
@@ -485,6 +517,8 @@ public class ResourceSet {
 		this.jsonObject = this.mc.get(this.appURI);
 		if (this.jsonObject.containsKey("rdfs:member")) {
 			this.jsonArray = (JsonArray) this.jsonObject.get("rdfs:member");
+		} else if (this.jsonObject.containsKey("oslc:results")) {
+			this.jsonArray = (JsonArray) this.jsonObject.get("oslc:results");
 		} else {
 			this.jsonArray = (JsonArray) this.jsonObject.get("member");
 		}
@@ -819,6 +853,8 @@ public class ResourceSet {
 			int size = -1;
 			if (jo.containsKey("member")) {
 				size = jo.getJsonArray("member").size();
+			} else if (jo.containsKey("oslc:results")) {
+				size = jo.getJsonArray("oslc:results").size();
 			} else if (jo.containsKey("rdfs:member")) {
 				size = jo.getJsonArray("rdfs:member").size();
 			}
@@ -842,6 +878,8 @@ public class ResourceSet {
 		int size = -1;
 		if (this.jsonObject.containsKey("member")) {
 			size = this.jsonObject.getJsonArray("member").size();
+		} else if (this.jsonObject.containsKey("oslc:results")) {
+			size = this.jsonObject.getJsonArray("oslc:results").size();
 		} else if (this.jsonObject.containsKey("rdfs:member")) {
 			size = this.jsonObject.getJsonArray("rdfs:member").size();
 		}

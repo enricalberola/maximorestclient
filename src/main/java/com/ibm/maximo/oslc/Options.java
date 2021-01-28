@@ -10,6 +10,9 @@
 
 package com.ibm.maximo.oslc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * 
  * {@code Options} is served for {@code MaximoConnector}.
@@ -47,6 +50,7 @@ public class Options {
 	private String apiContext = "oslc";
 	private String appURI = null;
 	private String tenantcode = "00";
+	private Map<String,Object> headers = new HashMap<>();
 	
 	public Options host(String host)
 	{
@@ -116,6 +120,11 @@ public class Options {
 	public Options apikey(String apikey)
 	{
 		this.apikey = apikey;
+		return this;
+	}
+	
+	public Options header(String key, Object value) {
+		this.headers.put(key, value);
 		return this;
 	}
 	
@@ -248,5 +257,9 @@ public class Options {
 		//if(mt == true) strb.append("?&_tenantcode="+tenantcode);
 		this.publicURI = strb.toString();
 		return this.publicURI;
+	}
+	
+	public Map<String,Object> getHeaders() {
+		return this.headers;
 	}
 }
