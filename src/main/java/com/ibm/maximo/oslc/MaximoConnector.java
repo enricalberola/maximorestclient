@@ -17,6 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -329,6 +330,11 @@ public class MaximoConnector {
 		HttpURLConnection con = (HttpURLConnection) httpURL
 				.openConnection();
 		con = this.setMethod(con, "GET");
+		if (headers == null) {
+			headers = this.options.getHeaders();
+		} else {
+			headers.putAll(this.options.getHeaders());
+		}
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
 		}
