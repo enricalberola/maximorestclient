@@ -12,12 +12,12 @@ package com.ibm.maximo.oslc;
 
 import java.io.*;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -307,26 +307,18 @@ public class MaximoConnector {
 		if(!isValid()){
 			throw new OslcException("The instance of MaximoConnector is not valid.");
 		}
-		String publicHost = this.options.getHost();
-		if(this.options.getPort()!=-1){
-			publicHost+= ":" + String.valueOf(this.options.getPort());
-		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
-		
-		if (options.isApikeyAuth()) {
-			uri = addApiKeyToURI(uri);
-			logger.fine("URI with apikey: "+uri);
-		}
 		
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
+		
+		if (options.isApikeyAuth()) {
+			httpURL = addApiKeyToURL(httpURL);
+			logger.fine("URI with apikey: "+httpURL.toString());
+		}
+		
 		HttpURLConnection con = (HttpURLConnection) httpURL
 				.openConnection();
 		con = this.setMethod(con, "GET");
@@ -376,26 +368,18 @@ public class MaximoConnector {
 		if(!isValid()){
 			throw new OslcException("The instance of MaximoConnector is not valid.");
 		}
-		String publicHost = this.options.getHost();
-		if(this.options.getPort()!=-1){
-			publicHost+= ":" + String.valueOf(this.options.getPort());
-		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
-		
-		if (options.isApikeyAuth()) {
-			uri = addApiKeyToURI(uri);
-			logger.fine("URI with apikey: "+uri);
-		}
 		
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
+		
+		if (options.isApikeyAuth()) {
+			httpURL = addApiKeyToURL(httpURL);
+			logger.fine("URI with apikey: "+httpURL.toString());
+		}
+		
 		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "GET");
 		if (headers!=null && !headers.isEmpty() ) {
@@ -436,29 +420,19 @@ public class MaximoConnector {
 		if(!isValid()){
 			throw new OslcException("The instance of MaximoConnector is not valid.");
 		}
-		String publicHost = this.options.getHost();
-		if(this.options.getPort()!=-1){
-			publicHost+= ":" + String.valueOf(this.options.getPort());
-		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
-		//LOG.isLoggable(Level.info);
+		
 		logger.fine(uri);
+		URL httpURL = new URL(uri);
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
 		
 		if (options.isApikeyAuth()) {
-			uri = addApiKeyToURI(uri);
-			logger.fine("URI with apikey: "+uri);
+			httpURL = addApiKeyToURL(httpURL);
+			logger.fine("URI with apikey: "+httpURL.toString());
 		}
 		
-		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-								.openConnection();
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "GET");
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -512,22 +486,13 @@ public class MaximoConnector {
 		if(!isValid()){
 			throw new OslcException("The instance of MaximoConnector is not valid.");
 		}
-		String publicHost = this.options.getHost();
-		if(this.options.getPort()!=-1){
-			publicHost+= ":" + String.valueOf(this.options.getPort());
-		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
+		
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "POST", properties);
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -591,22 +556,13 @@ public class MaximoConnector {
 		if(!isValid()){
 			throw new OslcException("The instance of MaximoConnector is not valid.");
 		}
-		String publicHost = this.options.getHost();
-		if(this.options.getPort()!=-1){
-			publicHost+= ":" + String.valueOf(this.options.getPort());
-		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
+		
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "POST");
 		con.setRequestProperty("slug", name);
 		con.setRequestProperty("x-document-description", description);
@@ -664,22 +620,12 @@ public class MaximoConnector {
 		if(!isValid()){
 			throw new OslcException("The instance of MaximoConnector is not valid.");
 		}
-		String publicHost = this.options.getHost();
-		if(this.options.getPort()!=-1){
-			publicHost+= ":" + String.valueOf(this.options.getPort());
-		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "PATCH",properties);
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -732,18 +678,12 @@ public class MaximoConnector {
 		if(this.options.getPort()!=-1){
 			publicHost+= ":" + String.valueOf(this.options.getPort());
 		}
-		if(!uri.contains(publicHost)){
-			URL tempURL = new URL(uri);
-			String currentHost = tempURL.getHost();
-			if(tempURL.getPort()!=-1){
-				currentHost+= ":" + String.valueOf(tempURL.getPort());
-			}
-			uri = uri.replace(currentHost, publicHost);
-		}
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		if(!httpURL.getHost().equals(this.options.getHost())){
+			httpURL = replacePublicHostName(httpURL);
+		}
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "MERGE",properties);
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -803,8 +743,7 @@ public class MaximoConnector {
 		}
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "BULK");
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -864,8 +803,7 @@ public class MaximoConnector {
 		}
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "SYNC",properties);
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -935,8 +873,7 @@ public class MaximoConnector {
 		}
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "MERGESYNC",properties);
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -1000,8 +937,7 @@ public class MaximoConnector {
 		}
 		logger.fine(uri);
 		URL httpURL = new URL(uri);
-		HttpURLConnection con = (HttpURLConnection) httpURL
-				.openConnection();
+		HttpURLConnection con = (HttpURLConnection) httpURL.openConnection();
 		con = this.setMethod(con, "DELETE");
 		if (headers!=null && !headers.isEmpty() ) {
 			con = this.setHeaders(con, headers);
@@ -1102,8 +1038,8 @@ public class MaximoConnector {
 			}
 		} else if (options.isApikeyAuth()) {
 			
-			URL httpURL = new URL(addApiKeyToURI(uri));
-
+			URL httpURL = addApiKeyToURL(new URL(uri));
+			
 			HttpURLConnection con = null;
 			if(proxy != null){
 				con = (HttpURLConnection) httpURL.openConnection(proxy);
@@ -1280,22 +1216,37 @@ public class MaximoConnector {
 		this.valid = false;
 	}
 	
-	private String addApiKeyToURI(String uri) throws OslcException {
+	private URL addApiKeyToURL(URL url) throws OslcException {
 		
 		String apikey = this.options.getApikey();
 		if (apikey == null) {
 			throw new OslcException(500, "No apikey in configuration");
 		}
 		try {
-			URI oldUri = new URI(uri);
+			URI oldUri = url.toURI();
 		    URI newUri = new URI(oldUri.getScheme(), 
 		    		oldUri.getAuthority(), 
 		    		oldUri.getPath(),
 		    		oldUri.getQuery() == null ? "apikey="+apikey : oldUri.getQuery() + "&" + "apikey=" + apikey,
 		    		oldUri.getFragment());
-		    return newUri.toString();
+		    return newUri.toURL();
+		} catch (MalformedURLException mue) {
+			throw new OslcException(500, "Error building url", mue);
 		} catch (URISyntaxException use) {
-			throw new OslcException(500, "Error building url", use);			
+			throw new OslcException(500, "Error building url", use);
+		}
+	}
+	
+	private URL replacePublicHostName(URL url) throws OslcException {
+		try {
+			URL publicURL = new URL(this.options.getPublicURI());
+			return new URL(
+					publicURL.getProtocol(),
+					publicURL.getHost(),
+					publicURL.getPort(),
+					url.getFile());
+		} catch(MalformedURLException mue) {
+			throw new OslcException(500, "Error building url", mue);
 		}
 	}
 }
