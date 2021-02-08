@@ -1223,17 +1223,25 @@ public class MaximoConnector {
 			throw new OslcException(500, "No apikey in configuration");
 		}
 		try {
-			URI oldUri = url.toURI();
-		    URI newUri = new URI(oldUri.getScheme(), 
-		    		oldUri.getAuthority(), 
-		    		oldUri.getPath(),
-		    		oldUri.getQuery() == null ? "apikey="+apikey : oldUri.getQuery() + "&" + "apikey=" + apikey,
-		    		oldUri.getFragment());
-		    return newUri.toURL();
+			StringBuffer newFile = new StringBuffer(url.getPath()).append("?");
+			newFile.append("apikey=");
+			newFile.append(apikey);
+			if(url.getQuery() != null) {
+				newFile.append("&");
+				newFile.append(url.getQuery());
+			}
+			if(url.getRef() != null) {
+				newFile.append("#");
+				newFile.append(url.getRef());
+			}
+			URL newUrl = new URL(
+					url.getProtocol(),
+					url.getHost(),
+					url.getPort(),
+					newFile.toString());
+			return newUrl;
 		} catch (MalformedURLException mue) {
 			throw new OslcException(500, "Error building url", mue);
-		} catch (URISyntaxException use) {
-			throw new OslcException(500, "Error building url", use);
 		}
 	}
 	
