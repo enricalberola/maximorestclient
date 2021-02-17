@@ -203,37 +203,39 @@ public class Options {
 	
 	String getAppURI()
 	{
-		if(appURI != null){
-			if(mt == true && !appURI.contains("tenantcode")) appURI+=(appURI.contains("?")?"":"?")+"&_tenantcode="+tenantcode;
-			if(this.isLean()){
-				if(this.appURI.contains("&lean=0")){
-					this.appURI = this.appURI.replace("&lean=0", "&lean=1");
-				}else if(!this.appURI.contains("&lean=1")){
-					this.appURI+=(appURI.contains("?")?"":"?")+"&lean=1";
-				}
-				return this.appURI;
-			}else{
-				if(this.appURI.contains("&lean=1")){
-					this.appURI = this.appURI.replace("&lean=1", "&lean=0");
-				}else if(!this.appURI.contains("&lean=0")){
-					this.appURI+=(appURI.contains("?")?"":"?")+"&lean=0";
-				}
-				return this.appURI;	
-			}		
+//		if(appURI != null){
+//			if(mt == true && !appURI.contains("tenantcode")) appURI+=(appURI.contains("?")?"":"?")+"&_tenantcode="+tenantcode;
+//			if(this.isLean()){
+//				if(this.appURI.contains("&lean=0")){
+//					this.appURI = this.appURI.replace("&lean=0", "&lean=1");
+//				}else if(!this.appURI.contains("&lean=1")){
+//					this.appURI+=(appURI.contains("?")?"":"?")+"&lean=1";
+//				}
+//				return this.appURI;
+//			}else{
+//				if(this.appURI.contains("&lean=1")){
+//					this.appURI = this.appURI.replace("&lean=1", "&lean=0");
+//				}else if(!this.appURI.contains("&lean=0")){
+//					this.appURI+=(appURI.contains("?")?"":"?")+"&lean=0";
+//				}
+//				return this.appURI;	
+//			}		
+//		}
+		if (appURI == null) {
+			StringBuffer strb = new StringBuffer(ssl?"https://":"http://");
+			strb.append(host);
+			if(this.port != null){
+				strb.append(":"+String.valueOf(port));
+			}
+			strb.append("/"+appContext).append("/"+this.apiContext);
+			if(mt == true){
+				strb.append(strb.toString().contains("?")?"":"?").append("&_tenantcode="+tenantcode);
+			}
+			if(lean == true){
+				strb.append(strb.toString().contains("?")?"":"?").append("&lean=1");
+			}
+			this.appURI = strb.toString();
 		}
-		StringBuffer strb = new StringBuffer(ssl?"https://":"http://");
-		strb.append(host);
-		if(this.port != null){
-			strb.append(":"+String.valueOf(port));
-		}
-		strb.append("/"+appContext).append("/"+this.apiContext);
-		if(mt == true){
-			strb.append(strb.toString().contains("?")?"":"?").append("&_tenantcode="+tenantcode);
-		}
-		if(lean == true){
-			strb.append(strb.toString().contains("?")?"":"?").append("&lean=1");
-		}
-		this.appURI = strb.toString();
 		return this.appURI;
 	}
 

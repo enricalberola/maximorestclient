@@ -4,7 +4,7 @@
 
 	<groupId>com.ibm.maximo</groupId>
 	<artifactId>maximo-restclient</artifactId>
-	<version>1.0.8-ea</version>
+	<version>1.0.9-ea</version>
 
 	<name>maximo-rest-client</name>
 	<description>The Maximo REST client library provides a set of driver API's which can be consumed by an JAVA based web component that would like to interface with a Maximo instance</description>

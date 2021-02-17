@@ -117,6 +117,8 @@ public class MaximoConnector {
 	public static final String HTTP_METHOD_BULK = "BULK";
 	public static final String HTTP_METHOD_SYNC = "SYNC";
 	public static final String HTTP_METHOD_MERGESYNC = "MERGESYNC";
+	public static final String LOGIN_FORM_HEADER_KEY = "X-com-ibm-team-repository-web-auth-msg";
+	public static final String LOGIN_FORM_HEADER_VALUE = "authrequired";
 
 	public String httpMethod = "GET";// by default it is get
 
@@ -341,6 +343,9 @@ public class MaximoConnector {
 				JsonReader rdr = Json.createReader(inStream);
 				JsonObject obj = rdr.readObject();
 				throw new OslcException(obj);
+		} else if (con.getHeaderField(LOGIN_FORM_HEADER_KEY) != null 
+				&& con.getHeaderField(LOGIN_FORM_HEADER_KEY).equals(LOGIN_FORM_HEADER_VALUE)) {
+			throw new OslcException("Session expired, new login is required");
 		} else {
 			inStream = con.getInputStream();
 		}
